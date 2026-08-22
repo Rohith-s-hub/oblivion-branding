@@ -1,0 +1,80 @@
+/* =========================================================
+   Oblivion logo palette — electric cyan / blue + violet
+   ========================================================= */
+
+:root {
+  --accent: #22d3ee;
+  --accent-secondary: #8b5cf6;
+  --accent-tertiary: #3b82f6;
+
+  --accent-muted: rgba(34, 211, 238, 0.12);
+  --accent-border: rgba(34, 211, 238, 0.38);
+  --accent-glow: rgba(34, 211, 238, 0.45);
+
+  --glow-x: 50vw;
+  --glow-y: 50vh;
+}
+
+/* Cursor ambient glow → cyan / blue / violet */
+.cursor-glow-container {
+  background: radial-gradient(
+    650px circle at var(--glow-x) var(--glow-y),
+    rgba(34, 211, 238, 0.14) 0%,
+    rgba(59, 130, 246, 0.10) 28%,
+    rgba(139, 92, 246, 0.06) 48%,
+    transparent 70%
+  ) !important;
+}
+
+.stat-accent,
+.section-label {
+  color: var(--accent) !important;
+}
+
+.accent-rule {
+  background: linear-gradient(90deg, #22d3ee, #8b5cf6) !important;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.32);
+  color: #fff;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid rgba(34, 211, 238, 0.7);
+  outline-offset: 3px;
+}
+
+/* Docs sidebar scroll */
+.docs-sidebar::-webkit-scrollbar { width: 6px; }
+.docs-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.35);
+  border-radius: 99px;
+}
+
+@media (max-width: 900px) {
+  .docs-sidebar {
+    position: relative !important;
+    width: 100% !important;
+    top: 0 !important;
+    bottom: auto !important;
+    height: auto !important;
+    border-right: none !important;
+  }
+  .docs-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* High-refresh helpers */
+html { scroll-behavior: smooth; }
+.models-rail {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+.model-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
