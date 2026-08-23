@@ -1,13 +1,25 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { user, loading, logout } = useAuth();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   }, []);
+
+  const displayName =
+    user?.displayName || (user?.email ? user.email.split('@')[0] : 'Account');
+  const avatarLetter = displayName.charAt(0).toUpperCase();
+
+  async function handleLogout() {
+    setMenuOpen(false);
+    await logout();
+  }
 
   return (
     <nav
@@ -136,32 +148,124 @@ export default function Nav() {
           GitHub
         </a>
 
-        {/* SIGN IN — this is the missing piece */}
-        <a
-          href="#auth"
-          style={{
-            fontFamily: 'var(--font-sans), system-ui, sans-serif',
-            fontSize: '13px',
-            fontWeight: 600,
-            color: '#f8fafc',
-            textDecoration: 'none',
-            padding: '7px 16px',
-            borderRadius: '20px',
-            background: 'rgba(255,255,255,0.08)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(34,211,238,0.12)';
-            e.currentTarget.style.borderColor = 'rgba(34,211,238,0.45)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
-          }}
-        >
-          Sign In
-        </a>
+        {loading ? null : user ? (
+          <div style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: 'var(--font-sans), system-ui, sans-serif',
+                fontSize: '13px',
+                fontWeight: 600,
+                color: '#f8fafc',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: '20px',
+                padding: '5px 14px 5px 5px',
+                cursor: 'pointer',
+              }}
+            >
+              <span
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #22d3ee, #8b5cf6)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: '#0a0c10',
+                }}
+              >
+                {avatarLetter}
+              </span>
+              {displayName}
+            </button>
+
+            {menuOpen ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 8px)',
+                  right: 0,
+                  minWidth: 160,
+                  background: 'rgba(15,17,22,0.98)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 12,
+                  padding: 6,
+                  boxShadow: '0 12px 30px rgba(0,0,0,0.4)',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '8px 10px',
+                    fontSize: 11.5,
+                    color: 'rgba(148,163,184,0.85)',
+                    borderBottom: '1px solid rgba(255,255,255,0.08)',
+                    marginBottom: 4,
+                    wordBreak: 'break-all',
+                  }}
+                >
+                  {user.email}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '8px 10px',
+                    fontSize: 13,
+                    color: '#fca5a5',
+                    background: 'none',
+                    border: 'none',
+                    borderRadius: 8,
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(248,113,113,0.08)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'none';
+                  }}
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <a
+            href="#auth"
+            style={{
+              fontFamily: 'var(--font-sans), system-ui, sans-serif',
+              fontSize: '13px',
+              fontWeight: 600,
+              color: '#f8fafc',
+              textDecoration: 'none',
+              padding: '7px 16px',
+              borderRadius: '20px',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(34,211,238,0.12)';
+              e.currentTarget.style.borderColor = 'rgba(34,211,238,0.45)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+            }}
+          >
+            Sign In
+          </a>
+        )}
 
         <a
           href="https://pypi.org/project/oblivion-agent/"

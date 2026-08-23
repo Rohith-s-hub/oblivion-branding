@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from 'firebase/auth';
+import { auth, googleProvider, githubProvider } from '../lib/firebase';
 
 type Slide = {
   src: string;
@@ -30,13 +37,18 @@ export default function Auth({ onBack }: { onBack: () => void }) {
   const [remember, setRemember] = useState(true);
   const [agreeTos, setAgreeTos] = useState(false);
 
-  // slideshow auto rotate
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   useEffect(() => {
     const t = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), 5500);
     return () => clearInterval(t);
   }, []);
 
-  // typewriter header
   useEffect(() => {
     const text = isLogin
       ? '> Establishing secure uplink...'
@@ -69,6 +81,65 @@ export default function Auth({ onBack }: { onBack: () => void }) {
     []
   );
 
+  async function handleEmailSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+
+    if (!email || !password) {
+      setError('Please fill in email and password.');
+      return;
+    }
+    if (!isLogin && !agreeTos) {
+      setError('Please agree to the Terms & Privacy Policy.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        if (firstName || lastName) {
+          await updateProfile(cred.user, {
+            displayName: [firstName, lastName].filter(Boolean).join(' '),
+          });
+        }
+      }
+      onBack();
+    } catch (err: any) {
+      setError(err?.message?.replace('Firebase: ', '') ?? 'Something went wrong.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGithub() {
+    setError('');
+    setLoading(true);
+    try {
+      await signInWithPopup(auth, githubProvider);
+      onBack();
+    } catch (err: any) {
+      setError(err?.message?.replace('Firebase: ', '') ?? 'GitHub sign-in failed.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogle() {
+    setError('');
+    setLoading(true);
+    try {
+      await signInWithPopup(auth, googleProvider);
+      onBack();
+    } catch (err: any) {
+      setError(err?.message?.replace('Firebase: ', '') ?? 'Google sign-in failed.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div
       style={{
@@ -83,7 +154,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
       }}
       className="auth-shell"
     >
-      {/* ================= LEFT: SLIDESHOW ================= */}
       <div
         className="auth-left"
         style={{
@@ -92,7 +162,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
           borderRight: '1px solid rgba(255,255,255,0.05)',
         }}
       >
-        {/* image stack */}
         <AnimatePresence mode="sync">
           <motion.img
             key={current.src}
@@ -116,7 +185,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
           />
         </AnimatePresence>
 
-        {/* fallback gradient if images missing */}
         <div
           aria-hidden
           style={{
@@ -128,7 +196,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
           }}
         />
 
-        {/* dark blend overlay */}
         <div
           style={{
             position: 'absolute',
@@ -138,7 +205,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
           }}
         />
 
-        {/* top-left brand + back */}
         <div
           style={{
             position: 'absolute',
@@ -200,7 +266,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
           </button>
         </div>
 
-        {/* bottom caption */}
         <div
           style={{
             position: 'absolute',
@@ -257,7 +322,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
             </motion.div>
           </AnimatePresence>
 
-          {/* dots */}
           <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
             {SLIDES.map((_, i) => {
               const active = i === slide;
@@ -285,7 +349,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
         </div>
       </div>
 
-      {/* ================= RIGHT: FORM ================= */}
       <div
         style={{
           position: 'relative',
@@ -306,7 +369,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
             maxWidth: 440,
           }}
         >
-          {/* terminal header */}
           <div style={{ marginBottom: 24 }}>
             <div
               style={{
@@ -356,7 +418,7 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                   New here?{' '}
                   <button
                     type="button"
-                    onClick={() => setIsLogin(false)}
+                    onClick={() => { setIsLogin(false); setError(''); }}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -376,7 +438,7 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                   Already have an account?{' '}
                   <button
                     type="button"
-                    onClick={() => setIsLogin(true)}
+                    onClick={() => { setIsLogin(true); setError(''); }}
                     style={{
                       background: 'none',
                       border: 'none',
@@ -395,7 +457,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
             </p>
           </div>
 
-          {/* form */}
           <AnimatePresence mode="wait">
             <motion.form
               key={isLogin ? 'login' : 'signup'}
@@ -403,23 +464,41 @@ export default function Auth({ onBack }: { onBack: () => void }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: isLogin ? 8 : -8 }}
               transition={{ duration: 0.28 }}
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleEmailSubmit}
               style={{ display: 'flex', flexDirection: 'column', gap: 12 }}
             >
               {!isLogin ? (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  <input placeholder="First name" style={inputBase} />
-                  <input placeholder="Last name" style={inputBase} />
+                  <input
+                    placeholder="First name"
+                    style={inputBase}
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                  <input
+                    placeholder="Last name"
+                    style={inputBase}
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
                 </div>
               ) : null}
 
-              <input type="email" placeholder="Email" style={inputBase} />
+              <input
+                type="email"
+                placeholder="Email"
+                style={inputBase}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
               <div style={{ position: 'relative' }}>
                 <input
                   type="password"
                   placeholder="Enter your password"
                   style={{ ...inputBase, paddingRight: 44 }}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <span
                   aria-hidden
@@ -516,8 +595,24 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                 </label>
               )}
 
+              {error ? (
+                <div
+                  style={{
+                    fontSize: 12.5,
+                    color: '#fca5a5',
+                    background: 'rgba(248,113,113,0.08)',
+                    border: '1px solid rgba(248,113,113,0.25)',
+                    borderRadius: 10,
+                    padding: '10px 12px',
+                  }}
+                >
+                  {error}
+                </div>
+              ) : null}
+
               <button
                 type="submit"
+                disabled={loading}
                 style={{
                   marginTop: 6,
                   padding: '14px 18px',
@@ -525,7 +620,8 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                   border: 'none',
                   fontSize: 14.5,
                   fontWeight: 600,
-                  cursor: 'pointer',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.7 : 1,
                   color: '#0a0c10',
                   background:
                     'linear-gradient(135deg, #22d3ee 0%, #6366f1 55%, #8b5cf6 100%)',
@@ -542,12 +638,11 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                   e.currentTarget.style.filter = 'brightness(1)';
                 }}
               >
-                {isLogin ? 'Sign in' : 'Create account'}
+                {loading ? 'Please wait…' : isLogin ? 'Sign in' : 'Create account'}
               </button>
             </motion.form>
           </AnimatePresence>
 
-          {/* OR divider */}
           <div
             style={{
               display: 'flex',
@@ -573,6 +668,8 @@ export default function Auth({ onBack }: { onBack: () => void }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <button
               type="button"
+              onClick={handleGithub}
+              disabled={loading}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -585,7 +682,8 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                 color: '#e2e8f0',
                 fontSize: 13.5,
                 fontWeight: 500,
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.7 : 1,
               }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -595,6 +693,8 @@ export default function Auth({ onBack }: { onBack: () => void }) {
             </button>
             <button
               type="button"
+              onClick={handleGoogle}
+              disabled={loading}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -607,7 +707,8 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                 color: '#e2e8f0',
                 fontSize: 13.5,
                 fontWeight: 500,
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.7 : 1,
               }}
             >
               <svg width="16" height="16" viewBox="0 0 48 48">
@@ -620,7 +721,6 @@ export default function Auth({ onBack }: { onBack: () => void }) {
             </button>
           </div>
 
-          {/* footer */}
           <div
             style={{
               marginTop: 26,

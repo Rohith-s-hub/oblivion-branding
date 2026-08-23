@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useMouseGlow } from './hooks/useMouseGlow';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Nav from './components/Nav';
 import IntroHero from './sections/IntroHero';
 import Hero from './sections/Hero';
@@ -28,8 +29,9 @@ function resolveView(): View {
   return 'home';
 }
 
-export default function App() {
+function AppInner() {
   useMouseGlow();
+  const { user, loading } = useAuth();
   const [view, setView] = useState<View>(() =>
     typeof window !== 'undefined' ? resolveView() : 'home'
   );
@@ -75,7 +77,16 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  // If already logged in and somehow on the auth view, bounce back home
+  useEffect(() => {
+    if (!loading && user && view === 'auth') {
+      openHome();
+    }
+  }, [loading, user, view]);
+
   if (view === 'auth') {
+    if (loading) return null;
+    if (user) return null;
     return <Auth onBack={openHome} />;
   }
 
@@ -100,5 +111,13 @@ export default function App() {
       <Feedback />
       <Outro />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
   );
 }
