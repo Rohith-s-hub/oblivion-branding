@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const GH = 'https://github.com/Rohith-s-hub/Oblivion-agent';
-const DOCS = 'https://rohithblog.vercel.app/blog/oblivion-local-ai-coding-agent';
+const DOCS = 'https://rohith.run.place/blog/oblivion-local-ai-coding-agent';
 const PYPI = 'https://pypi.org/project/oblivion-agent/';
 
 interface Spark {
