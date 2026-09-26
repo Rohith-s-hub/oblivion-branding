@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./redesign.css";
 
 /* ─── Fonts are injected via src/fonts.ts (Geist by Vercel, inlined by Vite) ─── */
 /* Font families used: 'Geist' (sans) + 'GeistMono' (mono) */

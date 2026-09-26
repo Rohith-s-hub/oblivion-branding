@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://oblivion.run.place/</loc>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://oblivion.run.place/docs</loc>
-    <priority>0.8</priority>
-  </url>
+  <url><loc>https://oblivion.run.place/</loc></url>
+  <url><loc>https://oblivion.run.place/product</loc></url>
+  <url><loc>https://oblivion.run.place/features</loc></url>
+  <url><loc>https://oblivion.run.place/how-it-works</loc></url>
+  <url><loc>https://oblivion.run.place/tools</loc></url>
+  <url><loc>https://oblivion.run.place/models</loc></url>
+  <url><loc>https://oblivion.run.place/knowledge-packs</loc></url>
+  <url><loc>https://oblivion.run.place/architecture</loc></url>
+  <url><loc>https://oblivion.run.place/voice</loc></url>
+  <url><loc>https://oblivion.run.place/integrations</loc></url>
+  <url><loc>https://oblivion.run.place/use-cases</loc></url>
+  <url><loc>https://oblivion.run.place/get-started</loc></url>
+  <url><loc>https://oblivion.run.place/configuration</loc></url>
+  <url><loc>https://oblivion.run.place/compare</loc></url>
+  <url><loc>https://oblivion.run.place/roadmap</loc></url>
+  <url><loc>https://oblivion.run.place/tech-stack</loc></url>
+  <url><loc>https://oblivion.run.place/changelog</loc></url>
+  <url><loc>https://oblivion.run.place/faq</loc></url>
+  <url><loc>https://oblivion.run.place/about</loc></url>
+  <url><loc>https://oblivion.run.place/troubleshooting</loc></url>
+  <url><loc>https://oblivion.run.place/contributing</loc></url>
 </urlset>

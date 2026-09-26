@@ -1,17 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useMouseGlow } from './hooks/useMouseGlow';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Nav from './components/Nav';
-import IntroHero from './sections/IntroHero';
-import Hero from './sections/Hero';
-import HowItWorks from './sections/HowItWorks';
-import Architecture from './sections/Architecture';
-import Features from './sections/Features';
-import Models from './sections/Models';
-import Meera from './sections/Meera';
-import Install from './sections/Install';
-import Feedback from './sections/Feedback';
-import Outro from './sections/Outro';
+import Redesign from './Redesign';
 import Docs from './pages/Docs';
 import Auth from './pages/Auth';
 
@@ -30,7 +19,6 @@ function resolveView(): View {
 }
 
 function AppInner() {
-  useMouseGlow();
   const { user, loading } = useAuth();
   const [view, setView] = useState<View>(() =>
     typeof window !== 'undefined' ? resolveView() : 'home'
@@ -94,24 +82,7 @@ function AppInner() {
     return <Docs onBack={openHome} />;
   }
 
-  return (
-    <div style={{ background: 'var(--bg-base, #0c0e12)', minHeight: '100vh' }}>
-      <div className="cursor-glow-container" aria-hidden="true" />
-      <Nav />
-      <main>
-        <IntroHero />
-        <Hero />
-        <HowItWorks />
-        <Architecture />
-        <Features />
-        <Models />
-        <Meera />
-        <Install />
-      </main>
-      <Feedback />
-      <Outro />
-    </div>
-  );
+  return <Redesign />;
 }
 
 export default function App() {

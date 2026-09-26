@@ -1,0 +1,230 @@
+[
+  {
+    "name": "batch_edit",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Edit multiple files together with a single combined preview; changes apply atomically."
+  },
+  {
+    "name": "create_dir",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Create a directory (and parents if needed)."
+  },
+  {
+    "name": "edit_file",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Surgically replace a section of a file. Safer than write_file for small changes."
+  },
+  {
+    "name": "file_exists",
+    "group": "Files & workspaces",
+    "tier": "read",
+    "description": "Check if a file or directory exists."
+  },
+  {
+    "name": "grep_files",
+    "group": "Files & workspaces",
+    "tier": "read",
+    "description": "Exact text search across files. Use search_code for conceptual queries."
+  },
+  {
+    "name": "insert_after",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Insert text immediately after a specific line/section in a file."
+  },
+  {
+    "name": "list_dir",
+    "group": "Files & workspaces",
+    "tier": "read",
+    "description": "List files and directories in a path."
+  },
+  {
+    "name": "new_workspace",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Create a NEW workspace folder ANYWHERE and switch the active workspace to it. Use this when the user says things like: 'create a new workspace', 'make a workspace called X', 'new workspace outside', 'create a folder in home', 'make a project in desktop'. The 'location' arg accepts keywords: 'home'/'outside' (= ~), 'desktop' (= ~/Desktop), 'projects' (= ~/Projects, default), or any explicit path like '~/code'."
+  },
+  {
+    "name": "read_file",
+    "group": "Files & workspaces",
+    "tier": "read",
+    "description": "Read the contents of a file."
+  },
+  {
+    "name": "switch_workspace",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Switch active workspace to an EXISTING folder. USE THIS when user says: 'go into <folder>', 'switch to <folder>', 'work in <folder>', 'cd to <folder>', 'change to <folder>'. Path can be: absolute (/home/rohit/x), relative (~/Projects/x), just a folder name (looks in Projects/), or relative to current workspace. After switch, ALL subsequent file operations happen in the new workspace."
+  },
+  {
+    "name": "write_file",
+    "group": "Files & workspaces",
+    "tier": "mutate",
+    "description": "Write content to a file. Shows diff/preview and asks approval first."
+  },
+  {
+    "name": "find_callers",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Find every chunk that references a symbol \u2014 excludes its definition. Essential for rename refactors and impact analysis before editing."
+  },
+  {
+    "name": "find_symbol",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Find a function/class/method by EXACT name across the workspace. Returns file:line + signature + docstring. INSTANT (no embedding). Use this FIRST when the user mentions a specific symbol by name."
+  },
+  {
+    "name": "list_symbols",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Outline a file: every function/class/method in declaration order with line ranges. Use this to understand a file's structure before reading or editing it."
+  },
+  {
+    "name": "plan_task",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "BEFORE writing code for a multi-file task (build app, scaffold project, etc.), call this to get a structured plan. The plan must be approved by user before execution. Use this for ANY task that creates more than 2 files."
+  },
+  {
+    "name": "project_map",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Render a tree of the current workspace (folders + files). Use this to understand the project's layout. Respects .git, node_modules, etc."
+  },
+  {
+    "name": "recall",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Read project memory (MEMORY.md). Useful at the start of a complex task to load conventions/lessons. Returns all memory or a single category."
+  },
+  {
+    "name": "remember",
+    "group": "Code intelligence",
+    "tier": "mutate",
+    "description": "Save a lesson, convention, or important fact to project memory (MEMORY.md). Use this when you learn something useful for FUTURE sessions: code conventions, architecture decisions, gotchas, user preferences. Categories: 'conventions', 'architecture', 'gotchas', 'preferences', 'general'."
+  },
+  {
+    "name": "search_code",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Semantically search the codebase. Returns the most relevant code chunks. Use this FIRST when answering questions about how/where something works in the project. Better than grep when the user asks conceptual questions."
+  },
+  {
+    "name": "verify_code",
+    "group": "Code intelligence",
+    "tier": "read",
+    "description": "Run a syntax check on a file you just wrote or edited. Use this AFTER write_file or edit_file to confirm no syntax errors. Supports Python, JavaScript, TypeScript, JSON, Bash, YAML."
+  },
+  {
+    "name": "fetch_page",
+    "group": "Web & packages",
+    "tier": "read",
+    "description": "Fetch and read a web page as clean text. Use after web_search to read full documentation, Stack Overflow answers, GitHub READMEs, changelogs."
+  },
+  {
+    "name": "lookup_package",
+    "group": "Web & packages",
+    "tier": "read",
+    "description": "Look up a package on PyPI or npm. Returns latest version, description, install command. Auto-detects Python vs JS from workspace."
+  },
+  {
+    "name": "search_stackoverflow",
+    "group": "Web & packages",
+    "tier": "read",
+    "description": "Search Stack Overflow for coding answers. Best for: error messages, how-to questions, library usage. Returns questions with answer previews. No API key needed."
+  },
+  {
+    "name": "search_stock_images",
+    "group": "Web & packages",
+    "tier": "read",
+    "description": "Search for high-resolution, royalty-free stock image URLs (Unsplash). Use this BEFORE writing web pages to fetch REAL image URLs for product cards, hero backgrounds, team avatars, and blog thumbnails. NEVER use placeholder boxes or blank images when you can fetch real stock images!"
+  },
+  {
+    "name": "web_search",
+    "group": "Web & packages",
+    "tier": "read",
+    "description": "Search the web using DuckDuckGo. Free, no API key needed. Use when user asks about: latest docs, current versions, recent releases, error messages, anything beyond training data. Returns titles + URLs + snippets. Use fetch_page to read full content."
+  },
+  {
+    "name": "list_servers",
+    "group": "Servers & preview",
+    "tier": "read",
+    "description": "List all running background servers started by start_server."
+  },
+  {
+    "name": "open_preview",
+    "group": "Servers & preview",
+    "tier": "read",
+    "description": "Open a generated HTML web page in the user's default browser. Automatically serves the workspace over a local HTTP server. Use this AFTER creating or updating web pages (e.g. index.html) so the user can see the live result immediately."
+  },
+  {
+    "name": "start_server",
+    "group": "Servers & preview",
+    "tier": "mutate",
+    "description": "Start a development server (npm run dev, python manage.py runserver, etc.) in the background. Returns PID and log file path. Server runs until stopped."
+  },
+  {
+    "name": "stop_server",
+    "group": "Servers & preview",
+    "tier": "mutate",
+    "description": "Stop a background server by its PID."
+  },
+  {
+    "name": "run_tests",
+    "group": "Testing",
+    "tier": "read",
+    "description": "Run the project test suite and get structured results. Auto-detects pytest/jest/vitest/npm/go/cargo. Returns pass/fail summary + structured failure details. Call this after fixing code to verify fixes work. Use /fix workflow: run_tests \u2192 fix failures \u2192 run_tests again."
+  },
+  {
+    "name": "test_file",
+    "group": "Testing",
+    "tier": "read",
+    "description": "Run tests in ONE specific file only. Faster than full suite when fixing a single file."
+  },
+  {
+    "name": "git_branch",
+    "group": "Git",
+    "tier": "read",
+    "description": "Manage git branches: list, create, switch, or delete."
+  },
+  {
+    "name": "git_commit",
+    "group": "Git",
+    "tier": "mutate",
+    "description": "Stage modified files and create a git commit. add_all=True stages all tracked modified files first. Does NOT push to remote."
+  },
+  {
+    "name": "git_diff",
+    "group": "Git",
+    "tier": "read",
+    "description": "Show git diff of changes. Use before committing to review. path: specific file (optional). staged: True for staged diff."
+  },
+  {
+    "name": "git_log",
+    "group": "Git",
+    "tier": "read",
+    "description": "Show recent git commits with hash, time, author, message."
+  },
+  {
+    "name": "git_status",
+    "group": "Git",
+    "tier": "read",
+    "description": "Show current git status: branch, staged files, unstaged changes, untracked files, and last commit. Call this FIRST before any git operation."
+  },
+  {
+    "name": "git_undo",
+    "group": "Git",
+    "tier": "mutate",
+    "description": "Safely undo the last commit. soft=keeps changes staged. mixed=unstages but keeps files. NEVER does hard reset or force push."
+  },
+  {
+    "name": "run_bash",
+    "group": "Shell",
+    "tier": "destructive",
+    "description": "Run a shell command. Asks for approval."
+  }
+]
