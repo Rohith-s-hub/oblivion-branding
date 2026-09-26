@@ -1,20 +1,35 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Redirecting…</title>
-    <script>
-      // Single Page Apps for GitHub Pages redirect trick
-      var segmentCount = 0;
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
-    </script>
-  </head>
-  <body></body>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#080a0b">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>404 · Oblivion Agent</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#080a0b;color:#f2f3ed;font-family:system-ui,-apple-system,sans-serif}.panel{width:min(680px,calc(100% - 36px));padding:clamp(28px,7vw,64px);border:1px solid #28312b;background:radial-gradient(ellipse at 85% 10%,#39ff8815,transparent 48%),#0d100e}.brand,.eyebrow,code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.brand{font-size:12px;letter-spacing:.14em}.brand b{color:#39ff88}.eyebrow{margin-top:72px;color:#39ff88;font-size:10px;letter-spacing:.15em}.code{margin:8px 0;color:#39ff88;font:clamp(64px,16vw,112px)/.95 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.09em}.title{margin:22px 0 12px;font-size:clamp(30px,7vw,48px);letter-spacing:-.055em}.copy{max-width:440px;color:#a2aaa3;line-height:1.7;font-size:14px}.actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:28px}.home{padding:12px 16px;background:#39ff88;color:#07100a;text-decoration:none;font:12px ui-monospace,monospace;font-weight:700}.help{color:#94dfa9;text-decoration:none;font:11px ui-monospace,monospace}.foot{margin-top:72px;color:#7f8a80;font:9px ui-monospace,monospace;letter-spacing:.1em}@media(prefers-reduced-motion:no-preference){.panel{animation:arrive .6s cubic-bezier(.2,.7,.2,1) both}.code{animation:glow 2.8s ease-in-out infinite alternate}@keyframes arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes glow{to{text-shadow:0 0 38px #39ff8866}}}
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <a class="brand" href="/" aria-label="Oblivion home">◫ <b>OBLIVION</b></a>
+    <p class="eyebrow">ROUTE NOT FOUND · WORKSPACE STILL OPEN</p>
+    <p class="code" aria-label="Error 404">404</p>
+    <h1 class="title">This path went off the map.</h1>
+    <p class="copy">The page may have moved, or the address may be mistyped. Head back to the homepage and find your way from there.</p>
+    <div class="actions"><a class="home" href="/">Return home ↗</a><a class="help" href="mailto:projectoblivion.dev@gmail.com">Contact the project ↗</a></div>
+    <p class="foot">OBLIVION AGENT · TERMINAL-NATIVE · OPEN SOURCE</p>
+  </main>
+  <script>
+    // GitHub Pages serves 404.html for direct SPA routes. Preserve the path for React,
+    // while leaving this designed error page visible if JavaScript is unavailable.
+    (function (location) {
+      var path = location.pathname.replace(/^\//, '');
+      if (!path || path === '404.html') return;
+      var query = location.search ? '&' + location.search.slice(1).replace(/&/g, '~and~') : '';
+      location.replace(location.origin + '/?/' + path.replace(/&/g, '~and~') + query + location.hash);
+    })(window.location);
+  </script>
+</body>
 </html>

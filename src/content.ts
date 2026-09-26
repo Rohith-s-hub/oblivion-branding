@@ -42,6 +42,8 @@ export const pages = [
   ['Changelog', '/changelog', 'Project milestones and published releases.'],
   ['FAQ', '/faq', 'Answers to common setup, privacy, and usage questions.'],
   ['About', '/about', 'Creator, project values, and ways to contribute.'],
+  ['Terms & conditions', '/terms', 'Terms for this website, accounts, and software use.'],
+  ['Privacy policy', '/privacy', 'What the website and agent process, and the choices you have.'],
 ] as const;
 
 export const features = [

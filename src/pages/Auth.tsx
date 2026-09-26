@@ -90,7 +90,7 @@ export default function Auth({ onBack }: { onBack: () => void }) {
       return;
     }
     if (!isLogin && !agreeTos) {
-      setError('Please agree to the Terms & Privacy Policy.');
+      setError('Please agree to the Terms & Conditions and Privacy Policy.');
       return;
     }
 
@@ -576,16 +576,14 @@ export default function Auth({ onBack }: { onBack: () => void }) {
                   <span>
                     I agree to the{' '}
                     <a
-                      href="#"
-                      onClick={(e) => e.preventDefault()}
+                      href="/terms"
                       style={{ color: '#a78bfa', textDecoration: 'none' }}
                     >
-                      Terms
+                      Terms & Conditions
                     </a>{' '}
                     &{' '}
                     <a
-                      href="#"
-                      onClick={(e) => e.preventDefault()}
+                      href="/privacy"
                       style={{ color: '#a78bfa', textDecoration: 'none' }}
                     >
                       Privacy Policy
