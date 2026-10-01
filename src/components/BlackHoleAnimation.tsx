@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
-const tailStartFrame = 90;
+const loopStartFrame = 0;
+const loopEndFrame = 30;
 const sourceFrameDelay = 30;
-const tailFrameDelay = 60;
+const loopFrameDelay = 60;
 
 export default function BlackHoleAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,6 +19,7 @@ export default function BlackHoleAnimation() {
     let timer = 0;
     let decoder: ImageDecoder | undefined;
     let frameIndex = 0;
+    let loopStarted = false;
 
     const play = async () => {
       try {
@@ -31,7 +33,7 @@ export default function BlackHoleAnimation() {
         const context = canvas?.getContext('2d', { alpha: true });
         if (!track || !canvas || !context) throw new Error('GIF frame decoding is unavailable');
 
-        if (track.frameCount <= tailStartFrame) throw new Error('GIF does not contain the requested loop segment');
+        if (track.frameCount < loopEndFrame) throw new Error('GIF does not contain the requested loop segment');
 
         const drawNextFrame = async () => {
           if (cancelled || !decoder) return;
@@ -48,8 +50,15 @@ export default function BlackHoleAnimation() {
           context.drawImage(image, 0, 0);
           image.close();
 
-          const delay = frameIndex >= tailStartFrame ? tailFrameDelay : sourceFrameDelay;
-          frameIndex = frameIndex === track.frameCount - 1 ? tailStartFrame : frameIndex + 1;
+          const delay = loopStarted ? loopFrameDelay : sourceFrameDelay;
+          if (!loopStarted && frameIndex === track.frameCount - 1) {
+            loopStarted = true;
+            frameIndex = loopStartFrame;
+          } else if (loopStarted && frameIndex === loopEndFrame - 1) {
+            frameIndex = loopStartFrame;
+          } else {
+            frameIndex += 1;
+          }
           timer = window.setTimeout(() => void drawNextFrame(), delay);
         };
 
