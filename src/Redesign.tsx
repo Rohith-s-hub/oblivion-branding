@@ -12,7 +12,23 @@ function Terminal({title,children}:{title:string;children:ReactNode}) { return <
 
 function Navbar() {
  const [menuOpen,setMenuOpen]=useState(false);
- return <nav className="r-nav"><a className="r-brand" href="/" aria-label="Oblivion home">◫ OBLIVION</a><button type="button" className="r-menu-button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}>☰</button><div className={`r-nav-links ${menuOpen?'is-open':''}`}>{navLinks.map(([label,href])=><a key={href} href={href} onClick={()=>setMenuOpen(false)}>{label}</a>)}<details className="persona"><summary>Explore</summary><div>{pages.map(([label,href])=><a key={href} href={href} onClick={()=>setMenuOpen(false)}>{label}</a>)}</div></details><details className="persona"><summary>I Am...</summary><div><a href="/get-started">A Developer</a><a href="/architecture">Evaluating for a Team</a><a href={`${project.links.github}/blob/main/CONTRIBUTING.md`}>A Contributor</a><a href="/voice">Curious About M.E.E.R.A.</a></div></details><a className="r-nav-cta" href="/get-started">Get started <span>↗</span></a></div></nav>;
+ const [activeDropdown,setActiveDropdown]=useState<'explore'|'persona'|null>(null);
+ useEffect(()=>{
+  if(!activeDropdown)return;
+  const dismissOnOutsideClick=(event:PointerEvent)=>{
+   if(event.target instanceof Element&&!event.target.closest('.persona'))setActiveDropdown(null);
+  };
+  const dismissOnEscape=(event:KeyboardEvent)=>{if(event.key==='Escape')setActiveDropdown(null)};
+  document.addEventListener('pointerdown',dismissOnOutsideClick);
+  document.addEventListener('keydown',dismissOnEscape);
+  return ()=>{
+   document.removeEventListener('pointerdown',dismissOnOutsideClick);
+   document.removeEventListener('keydown',dismissOnEscape);
+  };
+ },[activeDropdown]);
+ const toggleDropdown=(name:'explore'|'persona')=>setActiveDropdown(current=>current===name?null:name);
+ const closeMenus=()=>{setActiveDropdown(null);setMenuOpen(false)};
+ return <nav className="r-nav"><a className="r-brand" href="/" aria-label="Oblivion home">◫ OBLIVION</a><button type="button" className="r-menu-button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={()=>setMenuOpen(v=>!v)}>☰</button><div className={`r-nav-links ${menuOpen?'is-open':''}`}>{navLinks.map(([label,href])=><a key={href} href={href} onClick={closeMenus}>{label}</a>)}<details className="persona persona-explore" open={activeDropdown==='explore'}><summary aria-expanded={activeDropdown==='explore'} onClick={event=>{event.preventDefault();toggleDropdown('explore')}}>Explore</summary><div>{pages.map(([label,href])=><a key={href} href={href} onClick={closeMenus}>{label}</a>)}</div></details><details className="persona" open={activeDropdown==='persona'}><summary aria-expanded={activeDropdown==='persona'} onClick={event=>{event.preventDefault();toggleDropdown('persona')}}>I Am...</summary><div><a href="/get-started" onClick={closeMenus}>A Developer</a><a href="/architecture" onClick={closeMenus}>Evaluating for a Team</a><a href={`${project.links.github}/blob/main/CONTRIBUTING.md`} onClick={closeMenus}>A Contributor</a><a href="/voice" onClick={closeMenus}>Curious About M.E.E.R.A.</a></div></details><a className="r-nav-cta" href="/get-started" onClick={closeMenus}>Get started <span>↗</span></a></div></nav>;
 }
 
 function Home() {
