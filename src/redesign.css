@@ -124,7 +124,7 @@
 
 
 /* Supplied black hole reference animation, blended into the hero. */
-.r-intro-portal{background:#050505}
+.r-intro-portal{background:#000}
 .r-intro-portal:after{opacity:.4;background:radial-gradient(ellipse at 50% 49%,transparent 0 23%,#ffc27708 45%,transparent 72%)}
 .r-intro-grid{opacity:.09;z-index:1}
 .r-black-hole-gif{position:absolute;z-index:2;left:50%;top:43%;width:min(100vw,1180px);aspect-ratio:4/3;transform:translate(-50%,-50%);overflow:hidden;pointer-events:none;mask-image:linear-gradient(to bottom,#000 0%,#000 84%,transparent 92%)}
@@ -148,4 +148,4 @@
 
 /* Keep the square source near its natural size and blend its black background into the portal. */
 .r-black-hole-gif{left:50%;top:50%;width:min(94vmin,1000px);height:min(94vmin,1000px);aspect-ratio:1;transform:translate(-50%,-50%);overflow:visible;mask-image:none}
-.r-black-hole-gif img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transform:scale(1.04);mix-blend-mode:screen;opacity:1;filter:none;image-rendering:auto}
+.r-black-hole-gif img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transform:scale(1.04);mix-blend-mode:screen;opacity:1;filter:none;image-rendering:auto;mask-image:radial-gradient(ellipse 54% 54% at center,#000 78%,transparent 100%)}
