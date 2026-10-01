@@ -152,4 +152,4 @@
 @media(max-width:640px){.r-black-hole-gif{inset:0;width:100%;height:100%;max-width:none;top:0;left:0}.r-black-hole-gif img{object-position:center 47%}}
 
 
-.r-black-hole-gif video{display:block;width:100%;height:100%;object-fit:cover;object-position:center 47%;mix-blend-mode:screen;opacity:1;filter:none}
+.r-black-hole-gif canvas{display:block;width:100%;height:100%;object-fit:cover;object-position:center 47%;mix-blend-mode:screen;opacity:1;filter:none}

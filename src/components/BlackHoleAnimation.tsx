@@ -1,36 +1,79 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const tailStart = 2.7;
-const tailEnd = 3.6;
+const tailStartFrame = 90;
+const sourceFrameDelay = 30;
+const tailFrameDelay = 60;
 
 export default function BlackHoleAnimation() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [useGifFallback, setUseGifFallback] = useState(false);
 
   useEffect(() => {
-    let frame = 0;
-    const followPlayback = () => {
-      const video = videoRef.current;
-      if (video && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
-        if (video.currentTime >= tailStart) video.playbackRate = 0.5;
-        if (video.currentTime >= tailEnd - 0.015) video.currentTime = tailStart;
+    if (typeof ImageDecoder === 'undefined') {
+      setUseGifFallback(true);
+      return;
+    }
+
+    let cancelled = false;
+    let timer = 0;
+    let decoder: ImageDecoder | undefined;
+    let frameIndex = 0;
+
+    const play = async () => {
+      try {
+        const response = await fetch('/models/blackhole.gif');
+        if (!response.ok) throw new Error('Unable to load black hole animation');
+
+        decoder = new ImageDecoder({ data: await response.arrayBuffer(), type: 'image/gif' });
+        await decoder.tracks.ready;
+        const track = decoder.tracks.selectedTrack;
+        const canvas = canvasRef.current;
+        const context = canvas?.getContext('2d', { alpha: true });
+        if (!track || !canvas || !context) throw new Error('GIF frame decoding is unavailable');
+
+        if (track.frameCount <= tailStartFrame) throw new Error('GIF does not contain the requested loop segment');
+
+        const drawNextFrame = async () => {
+          if (cancelled || !decoder) return;
+          const { image } = await decoder.decode({ frameIndex });
+          if (cancelled) {
+            image.close();
+            return;
+          }
+
+          if (canvas.width !== image.displayWidth || canvas.height !== image.displayHeight) {
+            canvas.width = image.displayWidth;
+            canvas.height = image.displayHeight;
+          }
+          context.drawImage(image, 0, 0);
+          image.close();
+
+          const delay = frameIndex >= tailStartFrame ? tailFrameDelay : sourceFrameDelay;
+          frameIndex = frameIndex === track.frameCount - 1 ? tailStartFrame : frameIndex + 1;
+          timer = window.setTimeout(() => void drawNextFrame(), delay);
+        };
+
+        await drawNextFrame();
+      } catch {
+        if (!cancelled) setUseGifFallback(true);
       }
-      frame = window.requestAnimationFrame(followPlayback);
     };
 
-    frame = window.requestAnimationFrame(followPlayback);
-    return () => window.cancelAnimationFrame(frame);
+    void play();
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      decoder?.close();
+    };
   }, []);
 
   return (
     <div className="r-black-hole-gif" aria-hidden="true">
-      <video
-        ref={videoRef}
-        src="/models/blackhole-loop.webm"
-        autoPlay
-        muted
-        playsInline
-        preload="auto"
-      />
+      {useGifFallback ? (
+        <img src="/models/blackhole.gif" alt="" fetchPriority="high" />
+      ) : (
+        <canvas ref={canvasRef} />
+      )}
     </div>
   );
 }
