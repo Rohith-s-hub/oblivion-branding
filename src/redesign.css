@@ -146,10 +146,6 @@
 @media(max-width:640px){.r-black-hole-gif{top:43%;width:145vw;max-width:none}.r-intro-content h1{margin-top:clamp(90px,18vh,145px);font-size:clamp(46px,13vw,78px)}}
 @media(prefers-reduced-motion:reduce){.r-intro-cta{animation:none!important;opacity:1!important}}
 
-/* Full-bleed GIF background, feathered into the portal instead of a centered frame. */
-.r-black-hole-gif{inset:0;left:0;top:0;width:100%;height:100%;aspect-ratio:auto;transform:none;overflow:hidden;mask-image:radial-gradient(ellipse 78% 84% at 50% 47%,#000 48%,rgba(0,0,0,.92) 68%,transparent 100%)}
-.r-black-hole-gif img{width:100%;height:100%;object-fit:cover;object-position:center 47%;mix-blend-mode:screen;opacity:1;filter:none;image-rendering:auto}
-@media(max-width:640px){.r-black-hole-gif{inset:0;width:100%;height:100%;max-width:none;top:0;left:0}.r-black-hole-gif img{object-position:center 47%}}
-
-
-.r-black-hole-gif canvas{display:block;width:100%;height:100%;object-fit:cover;object-position:center 47%;mix-blend-mode:screen;opacity:1;filter:none}
+/* Keep the square source near its natural size and blend its black background into the portal. */
+.r-black-hole-gif{left:50%;top:50%;width:min(94vmin,1000px);height:min(94vmin,1000px);aspect-ratio:1;transform:translate(-50%,-50%);overflow:visible;mask-image:none}
+.r-black-hole-gif img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transform:scale(1.04);mix-blend-mode:screen;opacity:1;filter:none;image-rendering:auto}
